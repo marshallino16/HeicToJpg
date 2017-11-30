@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<title>Convert HEIC/HEIF to JPEG</title>
+        <meta name="description" content="The best free online heic to JPEG/JPG converter " />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Free HEIC to JPEG/JPG Online Photo Conversion Tool" />
+        <meta property="og:description" content="HEIC converter is a free online tool that converts iOS 11 photos from HEIC to JPEG/JPG, made with <3 by Anthony Fernandez marshallino16" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@marshallino16" />
+        <meta name="twitter:creator" content="@marshallino16">
+        <meta name="twitter:title" content="Convert HEIC to JPEG for free" />
+        <meta name="twitter:description" content=" HeicJPEG converter is a free online tool that converts iOS 11 photos from HEIC to JPEG/JPG powered by Anthony Fernandez marshallino16." />
+        <meta name="copyright" content="Copyright © 2017 Anthony Fernandez" />
+        <meta name="author" content="Anthony Fernandez" />
+        <link rel="icon" type="image/png" href={{favicon}} />
+
+		<!-- Google web fonts -->
+		<link href="http://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
+
+        <!-- jQuery -->
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+        <!-- Dropzone -->
+		<script src="http://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/dropzone/5.1.1/min/dropzone.min.css" type="text/css">
+
+        <!-- Skeleton -->
+        <link rel="stylesheet" href={{style_normalize}} type="text/css">
+        <link rel="stylesheet" href={{style_skeleton}} type="text/css">
+
+		<!-- Our main CSS file -->
+		<link rel="stylesheet" href={{style}} type="text/css">
+
+        <!-- Our main JS file -->
+		<script src={{script}}></script>
+
+        <!-- Hotjar Tracking Code for www.heicjpeg.com -->
+        <script>
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:709155,hjsv:6};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+        </script>
+
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-P32D2R7');
+        </script>
+        <!-- End Google Tag Manager -->
+
+        <script>
+            $(document).ready(function(){
+
+                var previewNode = document.querySelector("#template");
+                previewNode.id = "";
+                var previewTemplate = previewNode.parentNode.innerHTML;
+                previewNode.parentNode.removeChild(previewNode);
+
+                Dropzone.options.myDropzone = {
+                    init: function() {
+
+                        this.on("addedfile", function(file) {
+                            $(file.previewElement.querySelector("#success-conversion")).css('display','none');
+                        });
+
+                        this.on("error", function(file, errorMessage,  xhr) {
+                            console.log("error");
+                            console.log(file);
+
+                            $(file.previewElement.querySelector(".progress")).hide();
+                        });
+
+                        this.on("success", function(file, response) {
+                            console.log("success");
+                            console.log(file);
+
+                            $(file.previewElement.querySelector(".generated-link")).text("Download JPEG file");
+                            $(file.previewElement.querySelector(".generated-link")).attr('href', '/static/converted/'+file.xhr.response);
+                            $(file.previewElement.querySelector("#success-conversion")).css('display','block');
+                            $(file.previewElement.querySelector("#progress-uploading")).hide();
+                        });
+
+                        this.on("uploadprogress", function(file, progress, bytesSent) {
+                        });
+
+                        this.on("sending", function(file) {
+                        });
+
+                        this.on("queuecomplete", function(file, progress) {
+                        });
+                    },
+                    parallelUploads: 2,
+                    maxFilesize: 15, // MB
+                    acceptedFiles: ".heif, .heic",
+                    maxFiles: 50,
+                    dictDefaultMessage: "Choose .heic(s) or drop them here",
+                    createImageThumbnails: false,
+                    paramName: "photo",
+                    previewTemplate: previewTemplate,
+                    previewsContainer: "#previews"
+                };
+            });
+		</script>
+
+	</head>
+
+	<body>
+
+		<center><h1 id="title">Convert iOS11 HEIC/HEIF photo to JPEG</h1></center>
+
+		<form action="/upload" method="post" class="dropzone" id="myDropzone" enctype="multipart/form-data"></form>
+
+        <div class="table table-striped files" id="previews">
+
+        <div id="template" class="file-row container">
+            <div class="row">
+                <div class="one-third column">
+                    <div class="row">
+                        <p class="name one-half column" data-dz-name></p>
+                        <p class="size one-half column" data-dz-size></p>
+                    </div>
+                </div>
+                <div class="one-third column">
+
+                    <strong class="error text-danger" data-dz-errormessage></strong>
+                    <div class="progress progress active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div id="progress-uploading" class="progress-bar progress-bar-info" style="width:0%;" data-dz-uploadprogress></div>
+                        <div id="success-conversion" class="progress-bar progress-bar-success" style="width:100%; display:none;"></div>
+                    </div>
+                </div>
+                <div class="one-third column">
+                    <div class="row">
+                        <p class="generated-size one-half column"></p>
+                        <a class="generated-link one-half column" href="#" download></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P32D2R7"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        <!-- End Google Tag Manager (noscript) -->
+
+    </div>
+
+	</body>
+</html>
