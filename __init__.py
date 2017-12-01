@@ -11,7 +11,7 @@ import re
 import threading
 import time
 
-#sys.path.append('/home/heiftojpg/')
+
 
 #######################################
 #              FLASK                  #
@@ -20,6 +20,11 @@ import time
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 CORS(app)
+
+
+#######################################
+#              ROUTE                  #
+#######################################
 
 
 @app.before_first_request
@@ -69,4 +74,3 @@ def upload():
 
 if __name__ == '__main__':
     app.run(host='138.68.187.152')
-#    app.run(host='138.68.187.152', port=80)
