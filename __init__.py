@@ -5,6 +5,7 @@ from os.path import basename
 
 import os
 import subprocess
+from subprocess import Popen, PIPE, STDOUT
 import sys
 import base64
 import re
@@ -32,6 +33,11 @@ def startup():
     print("startedup")
 
 
+@app.route('/sitemap.xml', methods=['GET'])
+def sitemap():
+    return render_template('sitemap.xml')
+
+
 @app.route('/')
 def index():
     url_style_normalize = url_for('static', filename='css/normalize.css')
@@ -48,8 +54,8 @@ def index():
                            favicon=url_favicon)
 
 
-@app.route('/upload', methods=['POST'])
-def upload():
+@app.route('/convert', methods=['POST'])
+def convert():
     path_to_upload = os.path.abspath(os.path.dirname(__file__)) + '/uploads'
     path_converted = os.path.abspath(os.path.dirname(__file__)) + '/static/converted'
 
@@ -60,14 +66,17 @@ def upload():
     final_uploaded_filename = os.path.splitext(basename(final_uploaded_filepath))[0]
     final_converted_filename = os.path.join(path_converted, final_uploaded_filename)
 
-    bash_command = "tifig -v " + final_uploaded_filepath + " -o " + final_converted_filename + ".jpg"
-    process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE)
+    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filename + ".jpg"
+    process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
+    output_conversion = process.stdout.read()
     output, error = process.communicate()
 
     public_url = final_uploaded_filename + '.jpg'
 
-    if error is not None:
-        return "Error converting file :(", 500
+    if error is not None and len(str(error)) > 0:
+        return str(error), 411
+    elif output_conversion is not None and len(str(output_conversion)) > 0:
+        return str(output_conversion), 411
     else:
         return public_url, 200
 

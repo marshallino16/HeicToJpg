@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="utf-8"/>
-		<title>Convert HEIC/HEIF to JPEG</title>
+		<title>Free conversion HEIC/HEIF to JPEG</title>
         <meta name="description" content="The best free online heic to JPEG/JPG converter " />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Free HEIC to JPEG/JPG Online Photo Conversion Tool" />
@@ -63,7 +63,19 @@
             'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
             })(window,document,'script','dataLayer','GTM-P32D2R7');
         </script>
+        <script async src='https://www.google-analytics.com/analytics.js'></script>
         <!-- End Google Tag Manager -->
+
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-70817529-4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'UA-70817529-4');
+        </script>
+
 
         <script>
             $(document).ready(function(){
@@ -78,11 +90,25 @@
 
                         this.on("addedfile", function(file) {
                             $(file.previewElement.querySelector("#success-conversion")).css('display','none');
+
+                            gtag('event', 'addedfile', {
+                                'action': 'added',
+                                'label': file.name
+                            });
                         });
 
                         this.on("error", function(file, errorMessage,  xhr) {
                             console.log("error");
                             console.log(file);
+                            console.log(errorMessage);
+                            console.log(xhr);
+
+                            gtag('event', 'error', {
+                                'action': 'error',
+                                'label': file.name,
+                                'infos': errorMessage,
+                                'infos_plus': xhr.response
+                            });
 
                             $(file.previewElement.querySelector(".progress")).hide();
                         });
@@ -95,6 +121,11 @@
                             $(file.previewElement.querySelector(".generated-link")).attr('href', '/static/converted/'+file.xhr.response);
                             $(file.previewElement.querySelector("#success-conversion")).css('display','block');
                             $(file.previewElement.querySelector("#progress-uploading")).hide();
+
+                            gtag('event', 'success', {
+                                'action': 'success',
+                                'label': file.xhr.response
+                            });
                         });
 
                         this.on("uploadprogress", function(file, progress, bytesSent) {
@@ -125,7 +156,7 @@
 
 		<center><h1 id="title">Convert iOS11 HEIC/HEIF photo to JPEG</h1></center>
 
-		<form action="/upload" method="post" class="dropzone" id="myDropzone" enctype="multipart/form-data"></form>
+		<form action="/convert" method="post" class="dropzone" id="myDropzone" enctype="multipart/form-data"></form>
 
         <div class="table table-striped files" id="previews">
 
