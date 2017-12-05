@@ -3,6 +3,8 @@ from flask_cors import CORS
 
 from os.path import basename
 
+from PIL import Image
+
 import os
 import subprocess
 from subprocess import Popen, PIPE, STDOUT
@@ -72,6 +74,10 @@ def convert():
     output, error = process.communicate()
 
     public_url = final_uploaded_filename + '.jpg'
+
+    image = Image.open(final_converted_filename + '.jpg')
+    os.remove(final_converted_filename + '.jpg')
+    image.save(final_converted_filename + '.jpg', quality=70, optimize=True)
 
     if error is not None and len(str(error)) > 0:
         return str(error), 411
