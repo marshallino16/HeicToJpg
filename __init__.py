@@ -40,6 +40,22 @@ def sitemap():
     return render_template('sitemap.xml')
 
 
+@app.route('/faq')
+def faq():
+    url_style_normalize = url_for('static', filename='css/normalize.css')
+    url_style_skeleton = url_for('static', filename='css/skeleton.css')
+    url_style = url_for('static', filename='css/style.css')
+    url_script = url_for('static', filename='js/script.js')
+    url_favicon = url_for('static', filename='img/logo_large.png')
+
+    return render_template('faq.html',
+                           style=url_style,
+                           script=url_script,
+                           style_normalize=url_style_normalize,
+                           style_skeleton=url_style_skeleton,
+                           favicon=url_favicon)
+
+
 @app.route('/')
 def index():
     url_style_normalize = url_for('static', filename='css/normalize.css')
