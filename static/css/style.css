@@ -45,8 +45,23 @@ h1{
 }
 
 #title{
-    margin-top: 100px;
+    margin-top: 10%;
     font-weight: bold;
+}
+
+#title:after {
+    content:"Convert iOS11 HEIC/HEIF photo to JPG";
+}
+
+@media screen and (max-width: 1024px) {
+    #title:after {
+        content:"HEIC/HEIF to JPG";
+    }
+}
+@media screen and (man-width: 480px) {
+    #title:after {
+        content:"HEIC/HEIF to JPG";
+    }
 }
 
 a, a:visited {
@@ -63,10 +78,10 @@ section, footer, header, aside{
 }
 
 footer {
-    min-height: 60px;
+    height: 45px;
     background: white;
-    width: 640px;
-    margin: 0% -320px;
+    width: 440px;
+    margin: 0% -220px;
     position: fixed;
     left: 50%;
     bottom: 0%;
@@ -117,6 +132,52 @@ li p {
 
 .container{
     width: 100%;
+}
+
+/* Portrait */
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 667px)
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+
+
+
+}
+
+@media only screen
+  and (min-device-width: 414px)
+  and (max-device-width: 736px)
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) {
+
+
+
+}
+
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 812px)
+  and (-webkit-min-device-pixel-ratio: 3)
+  and (orientation: portrait) {
+
+
+
+}
+
+/* ----------- Non-Retina Screens ----------- */
+@media screen
+  and (min-device-width: 1200px)
+  and (max-device-width: 1600px)
+  and (-webkit-min-device-pixel-ratio: 1) {
+}
+
+/* ----------- Retina Screens ----------- */
+@media screen
+  and (min-device-width: 1200px)
+  and (max-device-width: 1600px)
+  and (-webkit-min-device-pixel-ratio: 2)
+  and (min-resolution: 192dpi) {
 }
 
 
