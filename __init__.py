@@ -40,6 +40,11 @@ def sitemap():
     return render_template('sitemap.xml')
 
 
+@app.route('/robots.txt', methods=['GET'])
+def robots():
+    return render_template('robots.txt')
+
+
 @app.route('/faq')
 def faq():
     url_style_normalize = url_for('static', filename='css/normalize.css')
