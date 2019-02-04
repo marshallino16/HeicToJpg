@@ -1,4 +1,4 @@
-# [HeicToJpg](http://heicjpeg.com/)
+# [HeicToJpg](http://www.heictojpg.site/)
 
 Minimalist website to convert iOS11 HEIC file to JPG
 
