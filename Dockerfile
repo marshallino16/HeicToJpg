@@ -19,6 +19,8 @@ RUN apk update \
 
 # Dpkg
 RUN apk add dpkg pkgconfig
+RUN ls -a /var/lib/dpkg
+RUN touch /var/lib/dpkg/status
 
 RUN apk add --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main
 
