@@ -1,4 +1,4 @@
-FROM alpine
+FROM nikolaik/python-nodejs:latest
 
  # Global env
 RUN apk update \
