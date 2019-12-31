@@ -1,6 +1,6 @@
 FROM spritsail/alpine-cmake
 
-WORKDIR /root
+WORKDIR /home
 
  # Global env
 RUN apk update \
@@ -40,8 +40,9 @@ RUN apk add --virtual vips-dependencies build-base \
 
 # Vips
 RUN \
-    cd /home/ &&\
     mkdir vips &&\
+    echo pwd &&\
+    echo ls -a &&\
     cd vips &&\
     wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
     tar xzvf vips-8.5.9.tar.gz &&\
