@@ -33,12 +33,13 @@ RUN \
     apk add lcms \
     apk add imagemagick-dev \
     apk add openexr \
-    apk add libwebp orc tiff poppler-glib librsvg libgsf \
+    apk add libwebp orc tiff poppler-glib librsvg libgsf
+    
 RUN apk add --virtual vips-dependencies build-base \
     zlib-dev libxml2-dev glib-dev gobject-introspection-dev \
     libjpeg-turbo-dev libexif-dev lcms2-dev fftw-dev giflib-dev libpng-dev \
     libwebp-dev orc-dev tiff-dev poppler-dev librsvg-dev libgsf-dev openexr-dev \
-    py-gobject3-dev flex bison \
+    py-gobject3-dev flex bison
 
 # Vips
 #RUN \
