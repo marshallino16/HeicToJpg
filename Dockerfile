@@ -19,7 +19,6 @@ RUN apk update \
 RUN apk add dpkg pkgconfig
 
 RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/
-RUN apk add vips-dev
 
 
 RUN \
@@ -42,17 +41,17 @@ RUN apk add --virtual vips-dependencies build-base \
     py-gobject3-dev flex bison \
 
 # Vips
-RUN \
-    cd /home/ &&\
-    mkdir vips &&\
-    cd vips &&\
-    wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
-    tar xzvf vips-8.5.9.tar.gz &&\
-    cd /home/vips/vips-8.5.9
+#RUN \
+#    cd /home/ &&\
+#    mkdir vips &&\
+#    cd vips &&\
+#    wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
+#    tar xzvf vips-8.5.9.tar.gz &&\
+#    cd /home/vips/vips-8.5.9
 
-RUN dpkg --configure -a
+#RUN dpkg --configure -a
 
-RUN ./configure && make && make install
+#RUN ./configure && make && make install
 
 ENV PATH "${PATH}:/usr/local/lib/"
 
