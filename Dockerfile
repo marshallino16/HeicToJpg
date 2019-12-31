@@ -41,16 +41,16 @@ RUN apk add --virtual vips-dependencies build-base \
 # Vips
 RUN \
     mkdir vips &&\
-    echo pwd &&\
-    echo ls -a &&\
+    pwd &&\
+    ls -a &&\
     cd vips &&\
     wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
     tar xzvf vips-8.5.9.tar.gz &&\
-    cd /home/vips/vips-8.5.9
-
-RUN dpkg --configure -a
-
-RUN ./configure && make && make install
+    cd /home/vips/vips-8.5.9 &&\
+    dpkg --configure -a &&\
+    ./configure &&\
+    make &&\
+    make install
 
 ENV PATH "${PATH}:/usr/local/lib/"
 
