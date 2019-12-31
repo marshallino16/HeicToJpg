@@ -118,6 +118,11 @@ li p {
     Drop zone Styles
 --------------------------*/
 
+.row {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 .dropzone{
     border: 2px dashed #0087F7;
     margin-left: 10%;
@@ -132,6 +137,10 @@ li p {
 
 .container{
     width: 100%;
+}
+
+.size {
+    text-align: center;
 }
 
 /* Portrait */

@@ -1,20 +1,13 @@
-from flask import Flask, render_template, request, Response, url_for, send_from_directory, send_file
+from flask import Flask, render_template, request, Response, url_for, send_from_directory, send_file, jsonify
 from flask_cors import CORS
+from flask_talisman import Talisman
 
 from os.path import basename
 
-from PIL import Image
+from PIL import Image, ExifTags
 
 import os
 import subprocess
-from subprocess import Popen, PIPE, STDOUT
-import sys
-import base64
-import re
-import threading
-import time
-
-
 
 #######################################
 #              FLASK                  #
@@ -22,18 +15,16 @@ import time
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-CORS(app)
+app.config["SERVER_NAME"] = "heictojpg.site"
+Talisman(app)
+
+
+# CORS(app)
 
 
 #######################################
 #              ROUTE                  #
 #######################################
-
-
-@app.before_first_request
-def startup():
-    print("startedup")
-
 
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
@@ -43,6 +34,16 @@ def sitemap():
 @app.route('/robots.txt', methods=['GET'])
 def robots():
     return render_template('robots.txt')
+
+
+@app.route('/.well-known/acme-challenge/WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI', methods=['GET'])
+def challenge1():
+    return render_template('WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI.txt')
+
+
+@app.route('/.well-known/acme-challenge/qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0', methods=['GET'])
+def challenge2():
+    return render_template('qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0.txt')
 
 
 @app.route('/faq')
@@ -98,6 +99,17 @@ def convert():
 
     image = Image.open(final_converted_filename + '.jpg')
     os.remove(final_converted_filename + '.jpg')
+    for orientation in ExifTags.TAGS.keys():
+        if ExifTags.TAGS[orientation] == 'Orientation':
+            break
+    exif = dict(image._getexif().items())
+
+    if exif[orientation] == 3:
+        image = image.rotate(180, expand=True)
+    elif exif[orientation] == 6:
+        image = image.rotate(270, expand=True)
+    elif exif[orientation] == 8:
+        image = image.rotate(90, expand=True)
     image.save(final_converted_filename + '.jpg', quality=70, optimize=True)
 
     if error is not None and len(str(error)) > 0:
@@ -109,4 +121,5 @@ def convert():
 
 
 if __name__ == '__main__':
-    app.run(host='138.68.187.152')
+    port = int(os.environ.get("PORT", 5050))
+    app.run(host='0.0.0.0', port=port)
