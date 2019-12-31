@@ -1,4 +1,4 @@
-FROM nikolaik/python-nodejs:latest
+FROM spritsail/alpine-cmake
 
  # Global env
 RUN apk update \
@@ -6,14 +6,14 @@ RUN apk update \
     apk add git
 
 # Cmake
-RUN \
-    wget https://cmake.org/files/v3.10/cmake-3.10.0.tar.gz &&\
-    tar xzvf cmake-3.10.0.tar.gz &&\
-    rm cmake-3.10.0.tar.gz &&\
-    cd cmake-3.10.0 &&\
-    ./bootstrap &&\
-    make &&\
-    make install
+#RUN \
+#    wget https://cmake.org/files/v3.10/cmake-3.10.0.tar.gz &&\
+#    tar xzvf cmake-3.10.0.tar.gz &&\
+#    rm cmake-3.10.0.tar.gz &&\
+#    cd cmake-3.10.0 &&\
+#    ./bootstrap &&\
+#    make &&\
+#    make install
 
 # Vips
 RUN \
