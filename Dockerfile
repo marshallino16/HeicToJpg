@@ -18,7 +18,7 @@ RUN apk update \
 # Dpkg
 RUN apk add dpkg pkgconfig
 
-RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ vips-dev
+#RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ vips-dev
 
 RUN \
     apk add --update alpine-sdk \
