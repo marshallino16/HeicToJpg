@@ -51,11 +51,11 @@ RUN apk add --virtual vips-dependencies build-base \
 
 ENV PATH "${PATH}:/usr/local/lib/"
 
-RUN apk add vips
+RUN apk add --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
 
 
 # FFMEG
-RUN apk add g++ vips-dev ffmpeg ffmpeg-dev ffmpeg-libs
+RUN apk add g++ ffmpeg ffmpeg-dev ffmpeg-libs
 
 
 # Tifig
