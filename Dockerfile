@@ -21,20 +21,15 @@ RUN apk add dpkg pkgconfig
 RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/
 
 
-RUN \
-    apk add --update alpine-sdk \
-    apk add glib \
-    apk add libxml2 \
-    apk add libxslt \
-    apk add fftw \
-    apk add gettext \
-    apk add gtk+2.0 \
-    apk add python \
-    apk add lcms \
-    apk add imagemagick-dev \
-    apk add openexr \
-    apk add libwebp orc tiff poppler-glib librsvg libgsf
-    
+RUN apk add --update alpine-sdk
+
+RUN apk add glib libxml2 \
+    libxslt fftw \
+    gettext gtk+2.0 \
+    python lcms \
+    imagemagick-dev openexr \
+    libwebp orc tiff poppler-glib librsvg libgsf
+
 RUN apk add --virtual vips-dependencies build-base \
     zlib-dev libxml2-dev glib-dev gobject-introspection-dev \
     libjpeg-turbo-dev libexif-dev lcms2-dev fftw-dev giflib-dev libpng-dev \
