@@ -15,20 +15,12 @@ RUN apk update \
 #    make &&\
 #    make install
 
-# Vips
-RUN \
-    cd /home/ &&\
-    mkdir vips &&\
-    cd vips &&\
-    wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
-    tar xzvf vips-8.5.9.tar.gz &&\
-    cd /home/vips/vips-8.5.9
-
-RUN dpkg --configure -a
+# Dpkg
+RUN apk add dpkg pkgconfig
 
 RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/ vips-dev
 
-RUN apk add pkgconfig \
+RUN \
     apk add --update alpine-sdk \
     apk add glib \
     apk add libxml2 \
@@ -46,6 +38,17 @@ RUN apk add --virtual vips-dependencies build-base \
     libjpeg-turbo-dev libexif-dev lcms2-dev fftw-dev giflib-dev libpng-dev \
     libwebp-dev orc-dev tiff-dev poppler-dev librsvg-dev libgsf-dev openexr-dev \
     py-gobject3-dev flex bison \
+
+# Vips
+RUN \
+    cd /home/ &&\
+    mkdir vips &&\
+    cd vips &&\
+    wget -c https://github.com/jcupitt/libvips/releases/download/v8.5.9/vips-8.5.9.tar.gz &&\
+    tar xzvf vips-8.5.9.tar.gz &&\
+    cd /home/vips/vips-8.5.9
+
+RUN dpkg --configure -a
 
 RUN ./configure && make && make install
 
