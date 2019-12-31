@@ -1,6 +1,7 @@
 steps:
 - name: gcr.io/cloud-builders/docker
   args: ['build', '-t', 'gcr.io/marsha-prd/heic-web:${SHORT_SHA}', '.']
+  timeout: 3000s
 - name: 'gcr.io/cloud-builders/docker'
   args: ["push", "gcr.io/marsha-prd/heic-web"]
 - name: 'gcr.io/cloud-builders/gcloud'
