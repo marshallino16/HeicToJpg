@@ -1,9 +1,11 @@
 FROM spritsail/alpine-cmake
 
+WORKDIR /root
+
  # Global env
 RUN apk update \
     apk upgrade \
-    apk add git
+    apk add git tmux build-base curl bash
 
 # Cmake
 #RUN \
@@ -18,7 +20,7 @@ RUN apk update \
 # Dpkg
 RUN apk add dpkg pkgconfig
 
-RUN apk add --update --no-cache --repository https://dl-3.alpinelinux.org/alpine/edge/testing/
+RUN apk add --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main
 
 
 RUN apk add --update alpine-sdk
@@ -51,8 +53,8 @@ RUN apk add --virtual vips-dependencies build-base \
 
 ENV PATH "${PATH}:/usr/local/lib/"
 
-RUN apk add --update --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community --repository http://dl-3.alpinelinux.org/alpine/edge/main vips-dev
-
+# VIPS
+RUN apk add vips-dev
 
 # FFMEG
 RUN apk add g++ ffmpeg ffmpeg-dev ffmpeg-libs
