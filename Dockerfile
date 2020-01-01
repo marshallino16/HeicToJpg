@@ -1,7 +1,6 @@
 FROM marshallino16/alpine_tifig
 
-# Install python
-
+# PYTHON + PIP
 RUN apk add --no-cache bash git nginx uwsgi uwsgi-python
 
 RUN apk add --update \
@@ -11,19 +10,19 @@ RUN apk add --update \
     py-pip \
     build-base
 
-
-# Get env argument
+# READ ENV VAR
 ARG env
 RUN echo "ENV :  $env"
 
+# COPY ALL FILES
 COPY . .
 
-RUN ls
-
+# INSTALL PYTHON PACKAGES
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
 
+# RUN
 CMD ["python", "main.py"]
 
 
