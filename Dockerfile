@@ -1,7 +1,12 @@
 FROM marshallino16/alpine_tifig
 
 # Install python
-RUN apk add python3
+RUN apk add --update \
+    python \
+    python3 \
+    python-dev \
+    py-pip \
+    build-base
 
 # Get env argument
 ARG env
