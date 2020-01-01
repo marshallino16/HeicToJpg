@@ -15,7 +15,7 @@ import subprocess
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config["SERVER_NAME"] = "heictojpg.site"
+#app.config["SERVER_NAME"] = "heictojpg.site"
 Talisman(app)
 
 
