@@ -16,7 +16,10 @@ RUN apk add --update \
 ARG env
 RUN echo "ENV :  $env"
 
+COPY . .
+
 RUN ls
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
