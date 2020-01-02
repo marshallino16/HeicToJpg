@@ -9,9 +9,7 @@ from PIL import Image, ExifTags
 import os
 import subprocess
 
-
 storage_client = storage.Client()
-bucket_uploads = storage_client.get_bucket('marsha-prd-uploads')
 bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
@@ -22,47 +20,12 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 CORS(app)
 
 
-#@app.route('/', defaults={'path': ''})
-#@app.route('/<path:path>')
-#def catch_all(path):
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def catch_all(path):
 #    if app.debug:
 #        return requests.get('http://localhost:8080/{}'.format(path)).text
 #    return render_template("index.html")
-
-@app.route('/sitemap.xml', methods=['GET'])
-def sitemap():
-    return render_template('sitemap.xml')
-
-
-@app.route('/robots.txt', methods=['GET'])
-def robots():
-    return render_template('robots.txt')
-
-
-@app.route('/.well-known/acme-challenge/WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI', methods=['GET'])
-def challenge1():
-    return render_template('WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI.txt')
-
-
-@app.route('/.well-known/acme-challenge/qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0', methods=['GET'])
-def challenge2():
-    return render_template('qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0.txt')
-
-
-@app.route('/faq')
-def faq():
-    url_style_normalize = url_for('static', filename='css/normalize.css')
-    url_style_skeleton = url_for('static', filename='css/skeleton.css')
-    url_style = url_for('static', filename='css/style.css')
-    url_script = url_for('static', filename='js/script.js')
-    url_favicon = url_for('static', filename='img/logo_large.png')
-
-    return render_template('faq.html',
-                           style=url_style,
-                           script=url_script,
-                           style_normalize=url_style_normalize,
-                           style_skeleton=url_style_skeleton,
-                           favicon=url_favicon)
 
 
 @app.route('/')
@@ -86,22 +49,21 @@ def convert():
     folder = '/tmp'
 
     f = request.files.get('photo')
+    filename = f.filename
+    filename_no_ext = os.path.splitext(basename(filename))[0]
 
     f.save(os.path.join(folder, f.filename))
 
-    final_uploaded_filepath = os.path.join(folder, f.filename)
-    final_uploaded_filename = os.path.splitext(basename(final_uploaded_filepath))[0]
-    final_converted_filename = os.path.join(folder, final_uploaded_filename)
+    final_uploaded_filepath = os.path.join(folder, filename)
+    final_converted_filepath = os.path.join(folder, filename_no_ext + 'jpg')
 
-    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filename + ".jpg"
+    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filepath + ".jpg"
     process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
     output_conversion = process.stdout.read()
     output, error = process.communicate()
 
-    public_url = final_uploaded_filename + '.jpg'
-
-    image = Image.open(final_converted_filename + '.jpg')
-    os.remove(final_converted_filename + '.jpg')
+    image = Image.open(final_converted_filepath)
+    os.remove(final_converted_filepath)
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
             break
@@ -113,17 +75,18 @@ def convert():
         image = image.rotate(270, expand=True)
     elif exif[orientation] == 8:
         image = image.rotate(90, expand=True)
-    image.save(final_converted_filename + '.jpg', quality=70, optimize=True)
+    image.save(final_converted_filepath, quality=70, optimize=True)
 
-    blob = bucket_uploads.blob(f.filename)
-    blob.upload_from_filename(final_converted_filename + '.jpg')
+    blob = bucket_conversions.blob(f.filename)
+    blob.upload_from_filename(final_converted_filepath)
+    blob.make_public()
 
     if error is not None and len(str(error)) > 0:
-        return str(error), 411
+        return jsonify(str(error)), 411
     elif output_conversion is not None and len(str(output_conversion)) > 0:
-        return str(output_conversion), 411
+        return jsonify(str(output_conversion)), 411
     else:
-        return public_url, 200
+        return jsonify({'url': blob.public_url}), 200
 
 
 if __name__ == '__main__':
