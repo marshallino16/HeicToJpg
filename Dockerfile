@@ -20,6 +20,8 @@ RUN echo "ENV :  $env"
 # COPY ALL FILES
 COPY . .
 
+RUN ls 
+
 RUN cd /app
 # INSTALL NODE DEP
 RUN npm install
