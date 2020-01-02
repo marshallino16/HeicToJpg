@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, Response, url_for, send_from_directory, send_file, jsonify
 from flask_cors import CORS
-from flask_talisman import Talisman
+#from flask_talisman import Talisman
 
 from os.path import basename
 
@@ -16,10 +16,10 @@ import subprocess
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 #app.config["SERVER_NAME"] = "heictojpg.site"
-Talisman(app)
+#Talisman(app)
 
 
-# CORS(app)
+CORS(app)
 
 
 #######################################
