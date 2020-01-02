@@ -2,6 +2,8 @@ const path = require('path')
 const fs = require('fs')
 
 module.exports = {
+    outputDir: 'dist',
+    assetsDir: 'static',
     pwa: {
         name: 'heictojpg',
         themeColor: '#00B7FF',

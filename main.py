@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, send_from_directory, jsonify
 from flask_cors import CORS
 from google.cloud import storage
 
@@ -8,9 +8,10 @@ from PIL import Image, ExifTags
 
 import os
 import subprocess
+import requests
 
-storage_client = storage.Client()
-bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
+#storage_client = storage.Client()
+#bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder="./app/dist/static", template_folder="./app/dist")
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -23,8 +24,10 @@ CORS(app)
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
-    if app.debug:
-        return requests.get('http://localhost:8080/{}'.format(path)).text
+    if path == "manifest.json":
+        return send_from_directory('./app/dist/', 'manifest.json')
+    if path == "favicon.ico":
+        return send_from_directory('./app/dist/', 'favicon.ico')
     return render_template("index.html")
 
 
