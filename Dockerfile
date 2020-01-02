@@ -22,13 +22,13 @@ COPY . .
 
 RUN ls
 
-RUN cd app/
+WORKDIR app/
 # INSTALL NODE DEP
 RUN npm install
 
 # BUILD
 RUN npm run build
-RUN cd ..
+WORKDIR /
 
 # INSTALL PYTHON PACKAGES
 RUN pip install --no-cache-dir -r requirements.txt
