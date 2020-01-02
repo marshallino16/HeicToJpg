@@ -48,6 +48,7 @@
                     parallelUploads: 2,
                     humbnailWidth: 250,
                     addRemoveLinks: true,
+                    acceptedFiles: ".heif, .heic",
                     maxFilesize: 15,
                     maxFiles: 50,
                     createImageThumbnails: true,

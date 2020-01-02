@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, Response, url_for, send_from_directory, send_file, jsonify
+from flask import Flask, render_template, request, url_for, jsonify
 from flask_cors import CORS
-from flask_talisman import Talisman
+from google.cloud import storage
 
 from os.path import basename
 
@@ -9,25 +9,25 @@ from PIL import Image, ExifTags
 import os
 import subprocess
 
-#######################################
-#              FLASK                  #
-#######################################
+
+storage_client = storage.Client()
+bucket_uploads = storage_client.get_bucket('marsha-prd-uploads')
+bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-#app.config["SERVER_NAME"] = "heictojpg.site"
-Talisman(app)
+# app.config["SERVER_NAME"] = "heictojpg.site"
 
 
-# CORS(app)
+CORS(app)
 
 
-@app.route('/', defaults={'path': ''})
-@app.route('/<path:path>')
-def catch_all(path):
-    if app.debug:
-        return requests.get('http://localhost:8080/{}'.format(path)).text
-    return render_template("index.html")
+#@app.route('/', defaults={'path': ''})
+#@app.route('/<path:path>')
+#def catch_all(path):
+#    if app.debug:
+#        return requests.get('http://localhost:8080/{}'.format(path)).text
+#    return render_template("index.html")
 
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap():
@@ -83,15 +83,15 @@ def index():
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    path_to_upload = os.path.abspath(os.path.dirname(__file__)) + '/uploads'
-    path_converted = os.path.abspath(os.path.dirname(__file__)) + '/static/converted'
+    folder = '/tmp'
 
     f = request.files.get('photo')
-    f.save(os.path.join(path_to_upload, f.filename))
 
-    final_uploaded_filepath = os.path.join(path_to_upload, f.filename)
+    f.save(os.path.join(folder, f.filename))
+
+    final_uploaded_filepath = os.path.join(folder, f.filename)
     final_uploaded_filename = os.path.splitext(basename(final_uploaded_filepath))[0]
-    final_converted_filename = os.path.join(path_converted, final_uploaded_filename)
+    final_converted_filename = os.path.join(folder, final_uploaded_filename)
 
     bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filename + ".jpg"
     process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
@@ -114,6 +114,9 @@ def convert():
     elif exif[orientation] == 8:
         image = image.rotate(90, expand=True)
     image.save(final_converted_filename + '.jpg', quality=70, optimize=True)
+
+    blob = bucket_uploads.blob(f.filename)
+    blob.upload_from_filename(final_converted_filename + '.jpg')
 
     if error is not None and len(str(error)) > 0:
         return str(error), 411
