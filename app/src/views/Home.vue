@@ -32,7 +32,9 @@
                                         <i class="far fa-file-image text-info"></i> {{file.size}}
                                     </small>
                                     <p v-if="file.error" class="card-text" v-html="file.error"></p>
+                                    <p v-if="file.progress < 100 && !file.error" class="card-text">Converting...</p>
                                     <p v-if="file.url" class="card-text">Successfully converted!</p>
+                                    <p v-if="file.progress == 100 && !file.url" class="card-text">Finalizing...</p>
                                     <div class="progress progress active" role="progressbar" aria-valuemin="0"
                                          aria-valuemax="100" aria-valuenow="0">
                                         <div v-if="file.progress < 100 && !file.error" id="progress-uploading"
@@ -44,7 +46,7 @@
                                         <div v-if="file.error" class="progress-bar bg-danger"
                                              style="width:100%;"></div>
                                     </div>
-                                    <a v-if="file.url" @click="downloadFile(file.url)" class="download-btn btn btn-success"
+                                    <a v-if="file.url" @click="downloadFile(file.url, file.filename)" class="download-btn btn btn-success"
                                        download>Download
                                         JPG</a>
                                 </div>
@@ -105,6 +107,7 @@
                         id: file.name,
                         error: null,
                         url: null,
+                        filename: null,
                         progress: 0,
                         size: self.humanFileSize(file.size, true)
                     })
@@ -136,6 +139,7 @@
 
                 if (response.url) {
                     localFile.url = response.url
+                    localFile.filename = response.filename
                 } else {
                     localFile.error = response
                 }
@@ -157,17 +161,18 @@
                 } while (Math.abs(bytes) >= thresh && u < units.length - 1);
                 return bytes.toFixed(1) + ' ' + units[u];
             },
-            downloadFile(url) {
+            downloadFile(url, filename) {
                 axios({
                     url: url,
                     method: 'GET',
                     responseType: 'blob',
                 }).then((response) => {
+                    console.log('Response', response)
                     let fileURL = window.URL.createObjectURL(new Blob([response.data]));
                     let fileLink = document.createElement('a');
 
                     fileLink.href = fileURL;
-                    fileLink.setAttribute('download', 'file.pdf');
+                    fileLink.setAttribute('download', filename);
                     document.body.appendChild(fileLink);
 
                     fileLink.click();

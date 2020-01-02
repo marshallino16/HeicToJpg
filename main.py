@@ -73,7 +73,7 @@ def convert():
     elif output_conversion is not None and len(str(output_conversion)) > 0:
         return jsonify(str(output_conversion)), 411
     else:
-        return jsonify({'url': blob.public_url}), 200
+        return jsonify({'url': blob.public_url, 'filename': filename_no_ext + '.jpg'}), 200
 
 
 if __name__ == '__main__':
