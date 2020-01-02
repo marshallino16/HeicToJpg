@@ -10,8 +10,8 @@ import os
 import subprocess
 import requests
 
-#storage_client = storage.Client()
-#bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
+storage_client = storage.Client()
+bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder="./app/dist/static", template_folder="./app/dist")
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -64,7 +64,7 @@ def convert():
         image = image.rotate(90, expand=True)
     image.save(final_converted_filepath, quality=70, optimize=True)
 
-    blob = bucket_conversions.blob(f.filename)
+    blob = bucket_conversions.blob(filename_no_ext + '.jpg')
     blob.upload_from_filename(final_converted_filepath)
     blob.make_public()
 
