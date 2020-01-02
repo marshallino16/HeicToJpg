@@ -9,12 +9,12 @@
             <div id="navbarNavDropdown-7">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item mx-2">
-                        <a class="btn btn-outline-light" href="/faq">
+                        <a class="btn btn-outline-danger" href="/faq">
                             FAQ
                         </a>
                     </li>
                     <li class="nav-item mx-2">
-                        <a class="btn btn-outline-light" href="/about">
+                        <a class="btn btn-outline-danger" href="/about">
                             About
                         </a>
                     </li>

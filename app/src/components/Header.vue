@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <div class="title">
-                        <h3 class="display-2 text-white" v-html="title"></h3>
+                        <h3 class="display-2" v-html="title"></h3>
                         <h4 class="text-white">{{ subtitle }}</h4>
                     </div>
                 </div>
