@@ -4,8 +4,8 @@
 uploads/*
 static/converted/*
 
-node_modules
-/dist
+app/node_modules
+app/dist
 
 # local env files
 .env.local
