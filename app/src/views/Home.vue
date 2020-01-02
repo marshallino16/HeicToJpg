@@ -44,7 +44,8 @@
                                         <div v-if="file.error" class="progress-bar bg-danger"
                                              style="width:100%;"></div>
                                     </div>
-                                    <a v-if="file.url" :href="file.url" class="download-btn btn btn-success">Download
+                                    <a v-if="file.url" @click="downloadFile(file.url)" class="download-btn btn btn-success"
+                                       download>Download
                                         JPG</a>
                                 </div>
                             </div>
@@ -61,6 +62,7 @@
 
     import NavBar from "../components/NavBar";
     import Header from "../components/Header";
+    import axios from 'axios'
     import vue2Dropzone from 'vue2-dropzone'
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
@@ -78,7 +80,7 @@
                     parallelUploads: 2,
                     humbnailWidth: 250,
                     addRemoveLinks: false,
-                    //acceptedFiles: ".heif, .heic",
+                    acceptedFiles: ".heif, .heic",
                     maxFilesize: 15,
                     maxFiles: 50,
                     createImageThumbnails: true,
@@ -154,6 +156,22 @@
                     ++u;
                 } while (Math.abs(bytes) >= thresh && u < units.length - 1);
                 return bytes.toFixed(1) + ' ' + units[u];
+            },
+            downloadFile(url) {
+                axios({
+                    url: url,
+                    method: 'GET',
+                    responseType: 'blob',
+                }).then((response) => {
+                    let fileURL = window.URL.createObjectURL(new Blob([response.data]));
+                    let fileLink = document.createElement('a');
+
+                    fileLink.href = fileURL;
+                    fileLink.setAttribute('download', 'file.pdf');
+                    document.body.appendChild(fileLink);
+
+                    fileLink.click();
+                });
             }
         },
         async mounted() {
