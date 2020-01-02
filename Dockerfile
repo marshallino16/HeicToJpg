@@ -10,6 +10,9 @@ RUN apk add --update \
     py-pip \
     build-base
 
+# NODEJS + NPM
+RUN apk add --update nodejs nodejs-npm
+
 # READ ENV VAR
 ARG env
 RUN echo "ENV :  $env"
@@ -17,8 +20,14 @@ RUN echo "ENV :  $env"
 # COPY ALL FILES
 COPY . .
 
+# INSTALL NODE DEP
+RUN npm install
+
 # INSTALL PYTHON PACKAGES
 RUN pip install --no-cache-dir -r requirements.txt
+
+# BUILD
+RUN npm run build
 
 EXPOSE 80
 

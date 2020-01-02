@@ -8,5 +8,6 @@ dev:
 
 build:
 	npm run build
+	npm start
 	export FLASK_DEBUG=0
 	python main.py

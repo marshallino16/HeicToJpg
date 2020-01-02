@@ -20,28 +20,12 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 CORS(app)
 
 
-# @app.route('/', defaults={'path': ''})
-# @app.route('/<path:path>')
-# def catch_all(path):
-#    if app.debug:
-#        return requests.get('http://localhost:8080/{}'.format(path)).text
-#    return render_template("index.html")
-
-
-@app.route('/')
-def index():
-    url_style_normalize = url_for('static', filename='css/normalize.css')
-    url_style_skeleton = url_for('static', filename='css/skeleton.css')
-    url_style = url_for('static', filename='css/style.css')
-    url_script = url_for('static', filename='js/script.js')
-    url_favicon = url_for('static', filename='img/logo_large.png')
-
-    return render_template('index.html',
-                           style=url_style,
-                           script=url_script,
-                           style_normalize=url_style_normalize,
-                           style_skeleton=url_style_skeleton,
-                           favicon=url_favicon)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    if app.debug:
+        return requests.get('http://localhost:8080/{}'.format(path)).text
+    return render_template("index.html")
 
 
 @app.route('/convert', methods=['POST'])
@@ -55,9 +39,9 @@ def convert():
     f.save(os.path.join(folder, f.filename))
 
     final_uploaded_filepath = os.path.join(folder, filename)
-    final_converted_filepath = os.path.join(folder, filename_no_ext + 'jpg')
+    final_converted_filepath = os.path.join(folder, filename_no_ext + '.jpg')
 
-    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filepath + ".jpg"
+    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filepath
     process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
     output_conversion = process.stdout.read()
     output, error = process.communicate()
