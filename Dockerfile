@@ -20,14 +20,16 @@ RUN echo "ENV :  $env"
 # COPY ALL FILES
 COPY . .
 
+RUN cd /app
 # INSTALL NODE DEP
 RUN npm install
 
-# INSTALL PYTHON PACKAGES
-RUN pip install --no-cache-dir -r requirements.txt
-
 # BUILD
 RUN npm run build
+RUN cd ..
+
+# INSTALL PYTHON PACKAGES
+RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 80
 
