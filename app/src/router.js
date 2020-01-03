@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store/index'
 const Home = () => import('./views/Home.vue')
+const FAQ = () => import('./views/FAQ.vue')
+const About = () => import('./views/About.vue')
 
 Vue.use(Router)
 
@@ -13,6 +15,16 @@ let router = new Router({
             path: '/',
             name: 'home',
             component: Home
+        },
+        {
+            path: '/faq',
+            name: 'faq',
+            component: FAQ
+        },
+        {
+            path: '/about',
+            name: 'about',
+            component: About
         }
     ]
 })

@@ -18,6 +18,14 @@ a {
     margin-top: 5rem;
 }
 
+.heading {
+    background: url('../img/background_header.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
 .minimal {
     max-width: 250px;
     flex: 1 1 23%;

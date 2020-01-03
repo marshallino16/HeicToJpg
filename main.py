@@ -8,15 +8,13 @@ from PIL import Image, ExifTags
 
 import os
 import subprocess
-import requests
 
 storage_client = storage.Client()
 bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder="./app/dist/static", template_folder="./app/dist")
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-# app.config["SERVER_NAME"] = "heictojpg.site"
-
+app.config["SERVER_NAME"] = "heictojpg.site"
 
 CORS(app)
 
@@ -50,6 +48,7 @@ def convert():
     output, error = process.communicate()
 
     image = Image.open(final_converted_filepath)
+    os.remove(final_uploaded_filepath)
     os.remove(final_converted_filepath)
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
@@ -67,6 +66,8 @@ def convert():
     blob = bucket_conversions.blob(filename_no_ext + '.jpg')
     blob.upload_from_filename(final_converted_filepath)
     blob.make_public()
+
+    os.remove(final_converted_filepath)
 
     if error is not None and len(str(error)) > 0:
         return jsonify(str(error)), 411

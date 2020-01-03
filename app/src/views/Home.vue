@@ -190,14 +190,6 @@
 
 <style lang="scss" scoped>
 
-    .heading {
-        background: url('../img/background_header.jpg') no-repeat center center fixed;
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        -o-background-size: cover;
-        background-size: cover;
-    }
-
     .themes-list {
         margin-top: 0 !important;
         margin-bottom: 2rem;
