@@ -17,13 +17,13 @@
                     Open Source project
                 </h1>
                 <div class="section themes-list">
-                    <p>Build with Vue.js + Flask 🌶
-                        <br>All this project can be deploy via the Dockerfile.
-                        <br>The Docker Image is based on Alpine + Tifig project
+                    <p>Built with Vue.js + Flask 🌶
+                        <br>This project can be deploy via Dockerfile.
+                        <br>Docker Image is based on Alpine + <a href="https://github.com/monostream/tifig" target="_blank">Tifig</a> project
                     </p>
                     <div class="horizontal">
                         <a href="https://hub.docker.com/repository/docker/marshallino16/alpine_tifig"
-                           class="btn btn-danger btn-lg">Docker Image repo</a>
+                           class="btn btn-danger btn-lg">Docker Image Repo</a>
                     </div>
                 </div>
             </div>
