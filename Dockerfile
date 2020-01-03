@@ -33,6 +33,9 @@ RUN npm install
 RUN npm run build
 WORKDIR /usr/src/app
 
+# COPY FILES
+RUN cp -r app/dist/img/icon app/dist/static/img
+
 # INSTALL PYTHON PACKAGES
 RUN pip install --no-cache-dir -r requirements.txt
 
