@@ -1,6 +1,6 @@
-from flask import Flask, render_template, request, Response, url_for, send_from_directory, send_file, jsonify
+from flask import Flask, render_template, request, send_from_directory, jsonify
 from flask_cors import CORS
-#from flask_talisman import Talisman
+from google.cloud import storage
 
 from os.path import basename
 
@@ -9,96 +9,47 @@ from PIL import Image, ExifTags
 import os
 import subprocess
 
-#######################################
-#              FLASK                  #
-#######################################
+storage_client = storage.Client()
+bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
-app = Flask(__name__, static_folder='static', template_folder='templates')
+app = Flask(__name__, static_folder="./app/dist/static", template_folder="./app/dist")
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-#app.config["SERVER_NAME"] = "heictojpg.site"
-#Talisman(app)
-
+app.config["SERVER_NAME"] = "heictojpg.site"
 
 CORS(app)
 
 
-#######################################
-#              ROUTE                  #
-#######################################
-
-@app.route('/sitemap.xml', methods=['GET'])
-def sitemap():
-    return render_template('sitemap.xml')
-
-
-@app.route('/robots.txt', methods=['GET'])
-def robots():
-    return render_template('robots.txt')
-
-
-@app.route('/.well-known/acme-challenge/WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI', methods=['GET'])
-def challenge1():
-    return render_template('WV_GrgZFE_iPl3-Vqz1oU1UX7Jgboq3sA68fk0TtZtI.txt')
-
-
-@app.route('/.well-known/acme-challenge/qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0', methods=['GET'])
-def challenge2():
-    return render_template('qFjkk9kTGsFxMlnjpW9fgQWz6en8rkrdIAF3dlufGs0.txt')
-
-
-@app.route('/faq')
-def faq():
-    url_style_normalize = url_for('static', filename='css/normalize.css')
-    url_style_skeleton = url_for('static', filename='css/skeleton.css')
-    url_style = url_for('static', filename='css/style.css')
-    url_script = url_for('static', filename='js/script.js')
-    url_favicon = url_for('static', filename='img/logo_large.png')
-
-    return render_template('faq.html',
-                           style=url_style,
-                           script=url_script,
-                           style_normalize=url_style_normalize,
-                           style_skeleton=url_style_skeleton,
-                           favicon=url_favicon)
-
-
-@app.route('/')
-def index():
-    url_style_normalize = url_for('static', filename='css/normalize.css')
-    url_style_skeleton = url_for('static', filename='css/skeleton.css')
-    url_style = url_for('static', filename='css/style.css')
-    url_script = url_for('static', filename='js/script.js')
-    url_favicon = url_for('static', filename='img/logo_large.png')
-
-    return render_template('index.html',
-                           style=url_style,
-                           script=url_script,
-                           style_normalize=url_style_normalize,
-                           style_skeleton=url_style_skeleton,
-                           favicon=url_favicon)
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def catch_all(path):
+    if path == "manifest.json":
+        return send_from_directory('./app/dist/', 'manifest.json')
+    if path == "favicon.ico":
+        return send_from_directory('./app/dist/', 'favicon.ico')
+    return render_template("index.html")
 
 
 @app.route('/convert', methods=['POST'])
 def convert():
-    path_to_upload = os.path.abspath(os.path.dirname(__file__)) + '/uploads'
-    path_converted = os.path.abspath(os.path.dirname(__file__)) + '/static/converted'
+    folder = '/tmp'
 
     f = request.files.get('photo')
-    f.save(os.path.join(path_to_upload, f.filename))
+    filename = f.filename
+    filename_no_ext = os.path.splitext(basename(filename))[0]
 
-    final_uploaded_filepath = os.path.join(path_to_upload, f.filename)
-    final_uploaded_filename = os.path.splitext(basename(final_uploaded_filepath))[0]
-    final_converted_filename = os.path.join(path_converted, final_uploaded_filename)
+    f.save(os.path.join(folder, f.filename))
 
-    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filename + ".jpg"
+    final_uploaded_filepath = os.path.join(folder, filename)
+    final_converted_filepath = os.path.join(folder, filename_no_ext + '.jpg')
+
+    bash_command = "tifig " + final_uploaded_filepath + " -o " + final_converted_filepath
     process = subprocess.Popen(bash_command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, close_fds=True)
     output_conversion = process.stdout.read()
     output, error = process.communicate()
 
-    public_url = final_uploaded_filename + '.jpg'
-
-    image = Image.open(final_converted_filename + '.jpg')
-    os.remove(final_converted_filename + '.jpg')
+    image = Image.open(final_converted_filepath)
+    os.remove(final_uploaded_filepath)
+    os.remove(final_converted_filepath)
     for orientation in ExifTags.TAGS.keys():
         if ExifTags.TAGS[orientation] == 'Orientation':
             break
@@ -110,14 +61,20 @@ def convert():
         image = image.rotate(270, expand=True)
     elif exif[orientation] == 8:
         image = image.rotate(90, expand=True)
-    image.save(final_converted_filename + '.jpg', quality=70, optimize=True)
+    image.save(final_converted_filepath, quality=70, optimize=True)
+
+    blob = bucket_conversions.blob(filename_no_ext + '.jpg')
+    blob.upload_from_filename(final_converted_filepath)
+    blob.make_public()
+
+    os.remove(final_converted_filepath)
 
     if error is not None and len(str(error)) > 0:
-        return str(error), 411
+        return jsonify(str(error)), 411
     elif output_conversion is not None and len(str(output_conversion)) > 0:
-        return str(output_conversion), 411
+        return jsonify(str(output_conversion)), 411
     else:
-        return public_url, 200
+        return jsonify({'url': blob.public_url, 'filename': filename_no_ext + '.jpg'}), 200
 
 
 if __name__ == '__main__':
