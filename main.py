@@ -9,12 +9,13 @@ from PIL import Image, ExifTags
 import os
 import subprocess
 
-storage_client = storage.Client()
-bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
+#storage_client = storage.Client()
+#bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
 
 app = Flask(__name__, static_folder="./app/dist/static", template_folder="./app/dist")
+
 app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.config["SERVER_NAME"] = "heictojpg.site"
+#app.config["SERVER_NAME"] = "heictojpg.site"
 
 CORS(app)
 
