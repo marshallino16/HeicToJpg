@@ -78,7 +78,7 @@
         data: function () {
             return {
                 dropzoneOptions: {
-                    url: 'https://heic-web-aowma5qsfa-uc.a.run.app/convert',
+                    url: '/convert',
                     parallelUploads: 2,
                     humbnailWidth: 250,
                     addRemoveLinks: false,
