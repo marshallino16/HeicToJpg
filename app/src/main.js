@@ -8,15 +8,8 @@ import './registerServiceWorker'
 
 import '@/style/style.scss'
 
-import * as SocialSharing from "vue-social-sharing";
-import VueCookies from 'vue-cookies'
-
-Vue.use(VueCookies)
-Vue.use(SocialSharing);
 Vue.use(VueLazyload);
 Vue.config.productionTip = false;
-
-VueCookies.config('6h')
 
 const PRESS_TIMEOUT = 1000
 

@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from './store/index'
+
 const Home = () => import('./views/Home.vue')
 const FAQ = () => import('./views/FAQ.vue')
 const About = () => import('./views/About.vue')
+const NotFound = () => import('./views/NotFound')
 
 Vue.use(Router)
 
@@ -25,7 +27,9 @@ let router = new Router({
             path: '/about',
             name: 'about',
             component: About
-        }
+        },
+        {path: '/404', component: NotFound},
+        {path: '*', redirect: '/404'}
     ]
 })
 
@@ -35,7 +39,8 @@ router.beforeEach((to, from, next) => {
     //console.log('STORE', store)
 
     /*if (to.path.includes('/quiz') && store.state.quizService.currentQuiz.length === 0) next('/')
-    else */ next()
+    else */
+    next()
 })
 
 
