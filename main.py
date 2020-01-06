@@ -32,7 +32,7 @@ def catch_all(path):
 
 @app.route('/url', methods=['GET'])
 def url():
-    jsonify({'msg': 'http://onvictinitor.com/afu.php?zoneid=3015098'}), 200
+    return jsonify({'msg': 'http://onvictinitor.com/afu.php?zoneid=3015098'}), 200
 
 
 @app.route('/convert', methods=['POST'])
