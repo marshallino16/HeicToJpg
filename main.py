@@ -30,6 +30,11 @@ def catch_all(path):
     return render_template("index.html")
 
 
+@app.route('/url', methods=['GET'])
+def url():
+    jsonify({'msg': 'http://onvictinitor.com/afu.php?zoneid=3015098'}), 200
+
+
 @app.route('/convert', methods=['POST'])
 def convert():
     folder = '/tmp'
