@@ -27,6 +27,10 @@ def catch_all(path):
         return send_from_directory('./app/dist/', 'manifest.json')
     if path == "favicon.ico":
         return send_from_directory('./app/dist/', 'favicon.ico')
+    if path == "sitemap.xml":
+        return send_from_directory('./app/dist/', 'sitemap.xml')
+    if path == "robots.txt":
+        return send_from_directory('./app/dist/', 'robots.txt')
     return render_template("index.html")
 
 
