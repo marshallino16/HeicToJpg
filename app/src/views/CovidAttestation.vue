@@ -40,7 +40,7 @@
                         </div>
                         <template v-else><b>Demeurant :</b> {{ address }}<br></template>
 
-                        <h4>certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par
+                        <h4 class="desc">certifie que mon déplacement est lié au motif suivant (cocher la case) autorisé par
                             l'article 1er du décret du 16 mars 2020 portant réglementation des déplacements dans le
                             cadre de la lutte contre la propagation du virus Covid-19:</h4>
 
@@ -164,56 +164,35 @@
                     ("0" + (date.getMonth() + 1)).slice(-2) +
                     ("0" + date.getDate()).slice(-2);
 
-                if (iPad) {
 
-                    setTimeout(function () {
-                        html2canvas(document.querySelector(".attestation"), {
-                            useCORS: true,
-                            allowTaint: true,
-                            imageTimeout: 50000,
-                            scale: Math.max(window.devicePixelRatio, scale)
-                        }).then(canvas => {
+                setTimeout(function () {
+                    html2canvas(document.querySelector(".attestation"), {
+                        useCORS: true,
+                        allowTaint: true,
+                        imageTimeout: 50000,
+                        scale: Math.max(window.devicePixelRatio, scale)
+                    }).then(canvas => {
 
-                            let img = canvas.toDataURL()
+                        let img = canvas.toDataURL()
+
+                        if (iPad) {
                             saveAs(img, filename + '.png');
-                            self.isSaving = false
-
-                        }).catch(err => {
-                            console.log("ERROR GENERATION", err)
-                            self.isSaving = false
-                        });
-                    }, 1000)
-
-                } else {
-                    domtoimage
-                        .toPng(self.$refs.content, {
-                            height: self.$refs.content.offsetHeight * scale,
-                            width: self.$refs.content.offsetWidth * scale,
-                            style: {
-                                transform: "scale(" + scale + ")",
-                                transformOrigin: "top left",
-                                width: self.$refs.content.offsetWidth + "px",
-                                height: self.$refs.content.offsetHeight + "px"
-                            }
-                        })
-                        .then(function (dataUrl) {
-
-                            let img = new Image();
-                            img.src = dataUrl;
-
+                        } else {
                             let doc = new jsPDF("p", "pt", "a4");
                             let width = doc.internal.pageSize.getWidth();
                             let height = doc.internal.pageSize.getHeight();
                             doc.addImage(img, 'PNG', 0, 0, width, height);
                             doc.save(filename + ".pdf")
-                            self.isSaving = false
+                        }
 
-                        })
-                        .catch(function (error) {
-                            console.error("oops, something went wrong!", error);
-                            self.isSaving = false
-                        });
-                }
+                        self.isSaving = false
+
+                    }).catch(err => {
+                        console.log("ERROR GENERATION", err)
+                        self.isSaving = false
+                    });
+                }, 1000)
+
 
             }
         }
@@ -256,6 +235,10 @@
 
         a, p, label, h1, h2, h3, h4 {
             font-family: Helvetica, Arial, sans-serif !important;
+        }
+
+        .desc {
+            margin-top: 32px;
         }
 
         .choice {
