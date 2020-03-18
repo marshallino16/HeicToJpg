@@ -221,6 +221,7 @@
         #previews, .uploads {
             display: flex;
             margin: 2rem;
+            font-family: Helvetica,Arial,sans-serif;
         }
 
     }
