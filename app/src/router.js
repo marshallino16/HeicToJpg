@@ -6,7 +6,6 @@ const Home = () => import('./views/Home.vue')
 const FAQ = () => import('./views/FAQ.vue')
 const About = () => import('./views/About.vue')
 const NotFound = () => import('./views/NotFound')
-const Attestation = () => import('./views/CovidAttestation')
 
 Vue.use(Router)
 
@@ -28,11 +27,6 @@ let router = new Router({
             path: '/about',
             name: 'about',
             component: About
-        },
-        {
-            path: '/attestation-sortie',
-            name: 'Attestation',
-            component: Attestation
         },
         {path: '/404', component: NotFound},
         {path: '*', redirect: '/404'}
