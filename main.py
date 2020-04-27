@@ -8,6 +8,7 @@ from PIL import Image, ExifTags
 
 import os
 import subprocess
+import logging
 
 storage_client = storage.Client()
 bucket_conversions = storage_client.get_bucket('marsha-prd-converted')
@@ -77,7 +78,10 @@ def convert():
     blob.upload_from_filename(final_converted_filepath)
     blob.make_public()
 
-    os.remove(final_converted_filepath)
+    # os.remove(final_converted_filepath)
+
+    logging.warning(error)
+    logging.warning(blob)
 
     if error is not None and len(str(error)) > 0:
         return jsonify(str(error)), 411
